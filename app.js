@@ -1,5 +1,7 @@
 require("dotenv").config();
 require("./config/database").connect();
+var cors = require('cors')
+
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -9,9 +11,15 @@ const auth = require("./middleware/auth");
 
 const app = express();
 
+var corsOptions = {
+    origin: 'http://localhost:5173',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
+
 app.use(express.json({ limit: "50mb" }));
 
-app.post("/register", async (req, res) => {
+app.post("/register", cors(corsOptions), async (req, res) => {
     try {
         // Get user input
         const { first_name, last_name, email, password } = req.body;
@@ -58,7 +66,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", cors(corsOptions), async (req, res) => {
     try {
         // Get user input
         const { email, password } = req.body;
@@ -87,19 +95,19 @@ app.post("/login", async (req, res) => {
             res.status(200).json(user);
         } else {
             //res.status(400).send("Invalid Credentials");
-            res.status(400).json({ message: 'Invalid Credentials' });
+            res.status(200).json({ message: 'Invalid Credentials' });
         }
     } catch (err) {
         console.log(err);
     }
 });
 
-app.get("/welcome", auth, (req, res) => {
+app.get("/welcome", cors(corsOptions), auth, (req, res) => {
     res.status(200).send("Welcome 🙌 ");
 });
 
 // This should be the last route else any after it won't work
-app.use("*", (req, res) => {
+app.use("*", cors(corsOptions), (req, res) => {
     res.status(404).json({
         success: "false",
         message: "Page not found",
