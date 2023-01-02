@@ -12,7 +12,7 @@ const auth = require("./middleware/auth");
 const app = express();
 
 var corsOptions = {
-    origin: ['http://localhost:5173','https://metropolis84.onrender.com'],
+    origin: ['http://localhost:5173','https://metropolis84.onrender.com','https://metropolis84.darapepe.com.co'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }
